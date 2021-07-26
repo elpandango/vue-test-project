@@ -1,0 +1,136 @@
+.add-product-form {
+  border-radius: 12px;
+  box-shadow: 0 8px 48px 0 rgba(184, 186, 229, 0.42);
+  border: solid 1px #ffffff;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 600px;
+  margin-bottom: 10px;
+
+  .title {
+    font-size: 22px;
+    margin: 0 0 20px 0;
+  }
+}
+
+.upload-photo {
+  border: solid 2px #ffffff;
+  //width: 30px;
+  //height: 30px;
+  //border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: grey;
+}
+
+.form-row {
+  width: calc(100% + 26px);
+  margin: 0 -13px 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .form-col {
+    width: 100%;
+    padding: 0 13px;
+
+    @media only screen and (max-width: 767px) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .form-col:last-child {
+    @media only screen and (max-width: 767px) {
+      margin-bottom: 0;
+    }
+  }
+
+  .form-col.w50p {
+    width: 50%;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+
+  .form-col.w33p {
+    width: 33.33%;
+    @media only screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+}
+
+.form-label {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+
+  select {
+    border-radius: 8px;
+    border: solid 1px #e2e5eb;
+    height: 40px;
+    width: 100%;
+    outline: none;
+    transition: all .3s;
+    padding: 0 16px;
+    font-size: 15px;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:focus {
+      border: solid 1px var(--title-blue-color);
+    }
+  }
+
+  input {
+    border-radius: 8px;
+    border: solid 1px #e2e5eb;
+    height: 40px;
+    width: 100%;
+    outline: none;
+    transition: all .3s;
+    padding: 0 16px;
+    color: var(--table-color-text);
+    font-size: 15px;
+    background-color: transparent;
+  }
+
+  input::placeholder {
+    font-size: 15px;
+    line-height: 1.47;
+    color: #a2aabe;
+  }
+
+  input:focus {
+    border: solid 1px var(--title-blue-color);
+  }
+
+  input.error {
+    border-color: #721c24;
+  }
+
+  input:-webkit-autofill {
+    -webkit-background-clip: text;
+  }
+
+  ul {
+    li {
+      padding: 0 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: normal;
+      line-height: 1.47;
+      color: var(--table-color-text);
+      transition: all .3s;
+    }
+
+    li:hover {
+      color: var(--title-color);
+    }
+  }
+}
