@@ -38,12 +38,18 @@
 
       <div class="form-row">
         <div class="form-col">
+
+          <div class="preview"
+               v-if="imagePreview">
+            <img :src="imagePreview" alt="">
+          </div>
+
           <input type="file"
                  name="photo"
                  ref="productPhoto"
                  @change="previewFiles">
           <error-message v-if="errors.photo && errors.message.length > 0"
-                         type="error">{{errors.message}}
+                         type="error">{{ errors.message }}
           </error-message>
         </div>
       </div>
@@ -81,6 +87,7 @@ export default {
         category: '',
         photo: ''
       },
+      imagePreview: null,
       categories: [
         {
           value: 'Category 1',
@@ -129,6 +136,7 @@ export default {
           reader.onload = e => {
             let image = new Image();
             image.src = e.target.result;
+            this.imagePreview = e.target.result;
             this.formData.photo = e.target.result;
           };
           reader.readAsDataURL(uploadedFile[0]);
