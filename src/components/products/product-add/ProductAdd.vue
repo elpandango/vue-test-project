@@ -1,7 +1,7 @@
 <template>
   <div class="add-product-form">
     <h2 class="title">Add new product</h2>
-    <form action="">
+    <form id="add-product">
       <div class="form-row">
         <div class="form-col w50p">
           <div class="form-label">Name</div>
@@ -117,7 +117,7 @@ export default {
       let uploadedFile = this.$refs.productPhoto.files[0];
       this.$refs.productPhoto.file.removeFile(uploadedFile);
     },
-    previewFiles() {
+    async previewFiles() {
       let typesArray = ['jpg', 'png'];
       let uploadedFile = this.$refs.productPhoto.files;
       let fileType = uploadedFile[0].type.split('/')[0];
@@ -129,11 +129,7 @@ export default {
           reader.onload = e => {
             let image = new Image();
             image.src = e.target.result;
-            image.onload = (img) => {
-              let width = parseInt(img.path[0].width);
-              let height = parseInt(img.path[0].height);
-              console.log('Image size: ', width, height);
-            }
+            this.formData.photo = e.target.result;
           };
           reader.readAsDataURL(uploadedFile[0]);
           this.errors.photo = false;
@@ -177,6 +173,13 @@ export default {
         this.errors.success = false;
       }.bind(this), 1500);
     },
+    resetForm() {
+      this.formData = {
+        name: '',
+        category: '',
+        photo: ''
+      }
+    },
     async saveBtnClickHandler() {
       const id = this.generateId();
       const createdDate = new Date();
@@ -187,6 +190,7 @@ export default {
         created_date: createdDate,
         name: this.formData.name,
         category: this.formData.category,
+        image_base64: this.formData.photo,
         image_name: imageName,
         image_type: imageType,
       };
@@ -198,6 +202,7 @@ export default {
       await httpRequest('POST', data);
       this.$emit('productAdded');
       this.resetErrorMessages();
+      this.resetForm();
     }
   }
 }

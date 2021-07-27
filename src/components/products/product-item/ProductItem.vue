@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     imageSrc() {
-      return this.productData?.image?.src ?? 'https://via.placeholder.com/200x150.it';
+      return this.productData?.image_base64 ?? 'https://via.placeholder.com/200x150.it';
     },
   }
 }
