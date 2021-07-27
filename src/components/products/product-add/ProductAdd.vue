@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {sendData} from "@/api";
+import {httpRequest} from "@/api";
 
 export default {
   name: "ProductAdd",
@@ -149,7 +149,7 @@ export default {
 
       console.log(this.$refs.productPhoto.files[0]);
 
-      const result = await sendData('POST', data);
+      const result = await httpRequest('POST', data);
 
       console.log(result);
 
