@@ -42,9 +42,6 @@
                  name="photo"
                  ref="productPhoto"
                  @change="previewFiles">
-
-<!--          {{errors}}-->
-
           <error-message v-if="errors.photo && errors.message.length > 0"
                          type="error">{{errors.message}}
           </error-message>
