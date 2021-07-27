@@ -12,6 +12,9 @@
                           placeholder="Product name"
                           required></label>
           </div>
+          <error-message v-if="errors.name"
+                         type="error">Name is required!
+          </error-message>
         </div>
 
         <div class="form-col w50p">
@@ -27,6 +30,9 @@
               </select>
             </label>
           </div>
+          <error-message v-if="errors.category"
+                         type="error">Category is required!
+          </error-message>
         </div>
       </div>
 
@@ -36,11 +42,21 @@
                  name="photo"
                  ref="productPhoto"
                  @change="previewFiles">
+
+<!--          {{errors}}-->
+
+          <error-message v-if="errors.photo && errors.message.length > 0"
+                         type="error">{{errors.message}}
+          </error-message>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-col btn-block">
+          <error-message v-if="errors.success"
+                         type="success">Product has been successfully added!
+          </error-message>
+
           <button type="button"
                   @click="saveBtnClickHandler"
                   class="btn btn-default">Save
@@ -54,9 +70,13 @@
 
 <script>
 import {httpRequest} from "@/api";
+import ErrorMessage from "@/components/ui/error-message/ErrorMessage";
 
 export default {
   name: "ProductAdd",
+  components: {
+    'error-message': ErrorMessage,
+  },
   data() {
     return {
       formData: {
@@ -85,7 +105,14 @@ export default {
           value: 'Category 5',
           id: 5
         }
-      ]
+      ],
+      errors: {
+        name: false,
+        category: false,
+        success: false,
+        message: '',
+        photo: false
+      }
     }
   },
   methods: {
@@ -102,7 +129,6 @@ export default {
       if (fileType === 'image') {
         if (typesArray.includes(imageType)) {
           const reader = new FileReader;
-          // console.log(reader);
           reader.onload = e => {
             let image = new Image();
             image.src = e.target.result;
@@ -113,17 +139,46 @@ export default {
             }
           };
           reader.readAsDataURL(uploadedFile[0]);
+          this.errors.photo = false;
+          this.errors.message = '';
         } else {
-          console.log('Выбран неправильный формат картинки. Разрешены только форматы jpg и png');
+          this.errors.photo = true;
+          this.errors.message = 'Выбран неправильный формат картинки. Разрешены только форматы jpg и png';
           // this.$refs.productPhoto.files[0] = null;
         }
       } else {
-        // console.log('Выбран неправильный тип файла. Разрешены только картинки');
+        this.errors.photo = true;
+        this.errors.message = 'Выбран неправильный тип файла. Разрешены только картинки';
       }
 
     },
+    validateFields() {
+      let errorCounter = 0;
+      for (const key in this.formData) {
+        if (!this.formData[key] && key !== 'photo') {
+          this.errors[key] = true;
+          this.errors.success = false;
+          errorCounter++;
+        } else {
+          this.errors[key] = false;
+        }
+      }
+
+      if (errorCounter === 0) {
+        this.errors.success = true;
+      }
+
+      return errorCounter === 0;
+    },
     generateId() {
       return Math.random().toString(36).substring(2);
+    },
+    resetErrorMessages() {
+      setTimeout(function () {
+        this.errors.name = false;
+        this.errors.category = false;
+        this.errors.success = false;
+      }.bind(this), 1500);
     },
     async saveBtnClickHandler() {
       const id = this.generateId();
@@ -139,14 +194,13 @@ export default {
         image_type: imageType,
       };
 
-      // console.log(this.$refs.productPhoto.files[0]);
+      if (!this.validateFields()) {
+        return;
+      }
 
       await httpRequest('POST', data);
-
-      // console.log(result);
-
       this.$emit('productAdded');
-
+      this.resetErrorMessages();
     }
   }
 }

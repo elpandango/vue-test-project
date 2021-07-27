@@ -8,6 +8,7 @@
           <div class="form-control">
             <label><input type="text"
                           class="search-input"
+                          placeholder="Search by name, category, date"
                           v-model="searchInput"></label>
           </div>
         </div>
@@ -73,6 +74,13 @@ export default {
     async getProductList() {
       const result = await httpRequest('GET');
       this.$store.dispatch('setProductList', result.data);
+    },
+    sortDates(array, direction) {
+      if (direction === 'desc') {
+        return array.sort((a,b) => new Date(b.created_date) - new Date(a.created_date));
+      } else {
+        return array.sort((a,b) => new Date(a.created_date) - new Date(b.created_date));
+      }
     }
   },
   async mounted() {
@@ -83,14 +91,18 @@ export default {
       'productList',
     ]),
     filteredProducts() {
+      const lowerCasedSearchInput = this.searchInput.toLowerCase();
       const prodList = this.productList.filter(product => {
-        return product.name.includes(this.searchInput) || product.category.includes(this.searchInput) || product.image_name.includes(this.searchInput);
+        const prodName = product.name?.toLowerCase() ?? '';
+        const prodCategory = product.category?.toLowerCase() ?? '';
+        const prodImageName = product.image_name?.toLowerCase() ?? '';
+        return prodName.includes(lowerCasedSearchInput) || prodCategory.includes(lowerCasedSearchInput) || prodImageName.includes(lowerCasedSearchInput);
       });
 
       if (this.sortByDate === 'desc') {
-        return prodList.sort((a,b) => new Date(b.created_date) - new Date(a.created_date));
+        return this.sortDates(prodList, 'desc');
       } else {
-        return prodList.sort((a,b) => new Date(a.created_date) - new Date(b.created_date));
+        return this.sortDates(prodList, 'asc');
       }
     },
   }
