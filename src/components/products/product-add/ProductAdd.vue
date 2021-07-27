@@ -41,7 +41,10 @@
 
           <div class="preview"
                v-if="imagePreview">
-            <img :src="imagePreview" alt="">
+            <div class="delete"
+                 @click="deletePreviewImage">Delete
+            </div>
+            <img :src="imagePreview" alt="Preview image">
           </div>
 
           <input type="file"
@@ -120,9 +123,9 @@ export default {
     }
   },
   methods: {
-    removeFile() {
-      let uploadedFile = this.$refs.productPhoto.files[0];
-      this.$refs.productPhoto.file.removeFile(uploadedFile);
+    deletePreviewImage() {
+      this.$refs.productPhoto.value = '';
+      this.imagePreview = null;
     },
     async previewFiles() {
       let typesArray = ['jpg', 'png'];
@@ -185,8 +188,9 @@ export default {
       this.formData = {
         name: '',
         category: '',
-        photo: ''
-      }
+        photo: '',
+      };
+      this.$refs.productPhoto.value = '';
     },
     async saveBtnClickHandler() {
       const id = this.generateId();
