@@ -43,7 +43,7 @@
 import ProductItem from '@/components/products/product-item/ProductItem';
 import ProductAdd from '@/components/products/product-add/ProductAdd';
 import {httpRequest} from "@/api";
-// import {mapGetters} from 'vuex';
+import {mapGetters} from 'vuex';
 
 export default {
   name: "index",
@@ -55,14 +55,13 @@ export default {
     return {
       searchInput: '',
       sortByDate: '',
-      productList: []
     }
   },
   methods: {
-    async deleteProduct(e) {
+    async deleteProduct(productId) {
       for (const key in this.productList) {
-        if (this.productList[key].id === e) {
-          await httpRequest('DELETE', null, null, key);
+        if (this.productList[key].id === productId) {
+          await httpRequest('DELETE', null, null, this.productList[key].prodId);
           await this.getProductList();
           break;
         }
@@ -73,25 +72,16 @@ export default {
     },
     async getProductList() {
       const result = await httpRequest('GET');
-      // this.store.dispatch('setProductList', result.data);
-
-      this.productList = [];
-      for (const key in result.data) {
-        this.productList.push(result.data[key]);
-      }
-
-      // console.log(this.productList);
-
+      this.$store.dispatch('setProductList', result.data);
     }
   },
   async mounted() {
     await this.getProductList();
-
   },
   computed: {
-    // ...mapGetters([
-    //   'productList',
-    // ]),
+    ...mapGetters([
+      'productList',
+    ]),
     filteredProducts() {
       const prodList = this.productList.filter(product => {
         return product.name.includes(this.searchInput) || product.category.includes(this.searchInput) || product.image_name.includes(this.searchInput);

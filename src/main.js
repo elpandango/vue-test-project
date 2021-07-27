@@ -11,6 +11,6 @@ new Vue({
     render: h => h(App),
     router: new VueRouter({
         routes,
-        store,
     }),
+    store,
 }).$mount('#app')

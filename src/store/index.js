@@ -5,11 +5,14 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-        productList: {},
+        productList: [],
     },
     mutations: {
         setProductList(state, payload) {
-            state.productList = {...payload};
+            state.productList = [];
+            for (const key in payload) {
+                state.productList.push({...payload[key], prodId: key});
+            }
         }
     },
     actions: {

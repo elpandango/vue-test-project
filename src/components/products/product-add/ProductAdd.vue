@@ -36,11 +36,6 @@
                  name="photo"
                  ref="productPhoto"
                  @change="previewFiles">
-          <!--        <button type="button"-->
-          <!--                class="upload-photo btn btn-default"-->
-          <!--                @click="chooseFiles()">-->
-          <!--          <input id="fileUpload" type="file" hidden>-->
-          <!--        </button>-->
         </div>
       </div>
 
@@ -94,9 +89,6 @@ export default {
     }
   },
   methods: {
-    chooseFiles() {
-      document.getElementById("fileUpload").click();
-    },
     removeFile() {
       let uploadedFile = this.$refs.productPhoto.files[0];
       this.$refs.productPhoto.file.removeFile(uploadedFile);
@@ -136,8 +128,8 @@ export default {
     async saveBtnClickHandler() {
       const id = this.generateId();
       const createdDate = new Date();
-      const imageName = this.$refs.productPhoto.files[0].name;
-      const imageType = this.$refs.productPhoto.files[0].type.split('/')[1];
+      const imageName = this.$refs.productPhoto.files[0]?.name ?? null;
+      const imageType = this.$refs.productPhoto.files[0]?.type.split('/')[1] ?? null;
       const data = {
         id,
         created_date: createdDate,
@@ -147,11 +139,11 @@ export default {
         image_type: imageType,
       };
 
-      console.log(this.$refs.productPhoto.files[0]);
+      // console.log(this.$refs.productPhoto.files[0]);
 
-      const result = await httpRequest('POST', data);
+      await httpRequest('POST', data);
 
-      console.log(result);
+      // console.log(result);
 
       this.$emit('productAdded');
 
